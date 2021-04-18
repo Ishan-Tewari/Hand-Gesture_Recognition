@@ -32,11 +32,16 @@ volume = cast(interface, POINTER(IAudioEndpointVolume))
 volRange = volume.GetVolumeRange()
 minVol = volRange[0]
 maxVol = volRange[1]
+volBar = 0
+volPer = 0
+volPrev = 0
+count = 0
+vol = 0
+marker = True
 
-
-while True:
+while marker:
     success, img = cap.read()
-
+    volPrev = vol
     # finding location of hands
     img = detector.findHands(img)
     lmList = detector.findPosition(img,draw=False)
@@ -44,7 +49,7 @@ while True:
         # 4 for thumb and 8 for index finger
         # print(lmList[4], lmList[8])
 
-        # highlighting them in the image
+        # highlighting index finger tip. thumb tip, line between them and the center of the line in the image
         x1, y1 = lmList[4][1], lmList[4][2]
         x2, y2 = lmList[8][1], lmList[8][2]
         cx,cy = (x1 + x2) // 2, (y1 + y2) // 2
@@ -56,23 +61,38 @@ while True:
 
         # calculating length of the line
         length = math.hypot(x2-x1, y2-y1)
-        print(length)
+        #print("Length of the line =",length)
 
         # converting hand length range to volume range
         # Hand length range 50 - 300
         # Volume range -65 - 0
         vol = np.interp(length,[50,300],[minVol,maxVol])
-        print(int(length), vol)
+        volBar = np.interp(length, [50, 300], [400, 150])
+        volPer = np.interp(length, [50,300], [0,100])
+
+        print("Length of the line is\033[1m",int(length),"\033[0mand the volume is\033[1m",  vol,"\033[0m")
         volume.SetMasterVolumeLevel(vol, None)
 
         if length < 50:
             cv2.circle(img, (cx, cy), 10, (0, 255, 0), cv2.FILLED)
 
+    cv2.rectangle(img, (50,150), (85,400), (102,0,0), 3)
+    cv2.rectangle(img, (50, int(volBar)), (85, 400), (255,0,0), cv2.FILLED)
+    cv2.putText(img, f'{int(volPer)}%', (40,450), cv2.FONT_ITALIC, 1, (102,0,0), 3)
+
     # adding fps to the image
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
-    cv2.putText(img, "FPS: " + str(int(fps)), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+    cv2.putText(img, "FPS: " + str(int(fps)), (10, 50), cv2.FONT_ITALIC, 1, (102, 0,0), 2)
 
-    cv2.imshow("Img",img)
-    cv2.waitKey(1)
+    if volPrev == vol:
+        count+=1
+    else:
+        count = 0
+
+    if count > 50:
+        marker = False
+    else:
+        cv2.imshow("Img",img)
+        cv2.waitKey(1)

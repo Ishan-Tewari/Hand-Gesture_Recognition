@@ -51,28 +51,28 @@ class handDetector():
 
         return lmList
 
-def main():
-    pTime = 0
-    cTime = 0
-
-    cap = cv2.VideoCapture(0)
-    detector = handDetector()
-    while True:
-        success, img = cap.read()
-        img = detector.findHands(img,True)
-        lmList = detector.findPosition(img)
-        if len(lmList) != 0:
-         print(lmList[4])
-
-        # adding fps to the image
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime
-        cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 0, 255), 3)
-
-        cv2.imshow("Image", img)
-        cv2.waitKey(1)
-
+# def main():
+#     pTime = 0
+#     cTime = 0
+#
+#     cap = cv2.VideoCapture(0)
+#     detector = handDetector()
+#     while True:
+#         success, img = cap.read()
+#         img = detector.findHands(img,True)
+#         lmList = detector.findPosition(img)
+#         if len(lmList) != 0:
+#          print(lmList[4])
+#
+#         # adding fps to the image
+#         cTime = time.time()
+#         fps = 1 / (cTime - pTime)
+#         pTime = cTime
+#         cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 0, 255), 3)
+#
+#         cv2.imshow("Image", img)
+#         cv2.waitKey(1)
+#
 
 
 if __name__ == '__main__':
