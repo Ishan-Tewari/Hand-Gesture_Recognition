@@ -1,10 +1,11 @@
 import cv2
 import mediapipe as mp
-import time
+import time                         #to check frame rate
 
+#to capture the video
 cap = cv2.VideoCapture(0)
 
-# using mediapipe for getting the hands recognized
+# using mediapipe for getting the hands recognized (21 points called landmarks per hand)
 mpHands = mp.solutions.hands
 hands = mpHands.Hands()
 
@@ -21,7 +22,7 @@ while True:
     imageRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     results = hands.process(imageRGB)
 
-    # to check if hand is detected or not
+    # to check if hand is detected or not, returns NONE if single hand and returns numeric value if multiple hands
     # print(results.multi_hand_landmarks)
 
     # drawing connections on hands
