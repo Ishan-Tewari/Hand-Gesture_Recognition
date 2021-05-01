@@ -66,9 +66,9 @@ while marker:
         # converting hand length range to volume range
         # Hand length range 50 - 300
         # Volume range -65 - 0
-        vol = np.interp(length,[50,300],[minVol,maxVol])
-        volBar = np.interp(length, [50, 300], [400, 150])
-        volPer = np.interp(length, [50,300], [0,100])
+        vol = np.interp(length,[50,200],[minVol,maxVol])
+        volBar = np.interp(length, [50, 200], [400, 150])
+        volPer = np.interp(length, [50,200], [0,100])
 
         print("Length of the line is\033[1m",int(length),"\033[0mand the volume is\033[1m",  vol,"\033[0m")
         volume.SetMasterVolumeLevel(vol, None)
@@ -78,7 +78,7 @@ while marker:
 
     cv2.rectangle(img, (50,150), (85,400), (102,0,0), 3)
     cv2.rectangle(img, (50, int(volBar)), (85, 400), (255,0,0), cv2.FILLED)
-    cv2.putText(img, f'{int(volPer)}%', (40,450), cv2.FONT_ITALIC, 1, (102,0,0), 3)
+    cv2.putText(img, f'{int(volPer)}%', (40,450), cv2.FONT_ITALIC, 1, (250,0,0), 3)
 
     # adding fps to the image
     cTime = time.time()
@@ -86,8 +86,11 @@ while marker:
     pTime = cTime
     cv2.putText(img, "FPS: " + str(int(fps)), (10, 50), cv2.FONT_ITALIC, 1, (102, 0,0), 2)
 
-    if volPrev == vol:
-        count+=1
+    validMin = volPrev-3
+    validMax = volPrev+3
+
+    if vol >= validMin and vol <= validMax:
+        count += 1
     else:
         count = 0
 
