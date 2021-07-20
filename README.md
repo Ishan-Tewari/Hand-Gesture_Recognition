@@ -29,3 +29,5 @@ We observed that the volume modulation works pretty well in general scenarios bu
 1. The distance of the hand from the camera is inversely proportional to the accuracy of the change in volume i.e. the further away the hand is from the camera, more difficult it is for the model to predict the change in length accurately.
 2. The naive implementation was a bit too sensitive so we reduced the sensitivity with some fine tuning.
 
+![Output 1](https://github.com/LabdhiSheth/Hand-Gesture_Recognition/blob/master/img/Screenshot%202021-07-20%20113551.png)
+![Output 2](https://github.com/LabdhiSheth/Hand-Gesture_Recognition/blob/master/img/Screenshot%202021-07-20%20113613.png)
